@@ -20,6 +20,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import BookIcon from '@mui/icons-material/Book';
 import ListIcon from '@mui/icons-material/List';
+import {Link, useNavigate} from 'react-router-dom';
+
 const drawerWidth = 200;
 
 // interface Props {
@@ -35,10 +37,12 @@ export default function DashBoardTemplate(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   //const [role, setRole] = React.useState('admin');
 
-  const testUserType = "user";
+ 
+
+  const testUserType = "admin";
   //admin sidenav
   const adminNavItems = [
-    { name: "Home", icon:HomeIcon},
+    { name: "Home", icon:HomeIcon}, 
     { name: "Dashboard", icon:DashboardIcon },
     { name: "Calendar", icon: CalendarMonthIcon },
     { name: "Logs", icon: BookIcon },

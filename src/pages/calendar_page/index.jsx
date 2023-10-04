@@ -66,7 +66,7 @@ export default function Calendar(props) {
   const [cancelModal, setCancelModal] = useState(false);
   const [viewModal, setViewModal] = useState(false);
   const [tempId, setTempId] = useState(0);
-  const [role, setRole] = useState('user'); //default role
+  const [role, setRole] = useState('admin'); //default role
   const [info,setInfo]=useState({});
 
   const submitBooking = () => {
