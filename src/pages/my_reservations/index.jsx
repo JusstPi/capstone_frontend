@@ -24,6 +24,7 @@ import {
   ButtonStyle1,
   ButtonStyle2,
 } from "./styles";
+import { right } from "@popperjs/core";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -75,6 +76,7 @@ export default function MyReservations(props) {
     const [viewModal, setViewModal] = useState(false);
     const [cancelModal, setCancelModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
+    const [attendeesModal, setAttendeesModal] = useState(false);
     const [reviewModal, setReviewModal] = useState(false);
     const [viewDetails, setViewDetails] = useState({});
     const found = (element) => element.name === attendeeName;
@@ -485,16 +487,17 @@ export default function MyReservations(props) {
         </Box>
 
       </Modal>
+
       <Modal
-      disableAutoFocus={true}
-      open={editModal}
-      onClose={() => setEditModal(false)}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-      style={{width: "100%", overflow: "auto" }} 
+        disableAutoFocus={true}
+        open={editModal}
+        onClose={() => setEditModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        style={{ width: "100%", overflow: "auto" }}
       >
         <Box sx={modalStyle}>
-        <Box sx={modalHeaderStyle}>
+          <Box sx={modalHeaderStyle}>
             <Typography
               sx={{ fontWeight: "bold" }}
               id="modal-modal-title"
@@ -505,33 +508,25 @@ export default function MyReservations(props) {
             >
               Edit Booking Details
             </Typography>
-            
           </Box>
+
           <Box p={4}>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            
-          
-              <Box >
-              <TextField
+            <TextField
               name="description"
               onChange={(e) => props.handleChange(e)}
               sx={{ width: "100%" }}
-              
               id="outlined-basic"
               label="Title"
               variant="standard"
               inputProps={{ maxLength: 50 }}
             />
-              <FormControl variant="standard" sx={{ minWidth: "100%" }}>
-              
+            <FormControl variant="standard" sx={{ minWidth: "100%" }}>
               <InputLabel id="demo-simple-select-filled-label">
                 Purpose
               </InputLabel>
               <Select
                 labelId="demo-simple-select-standard-label"
                 id="demo-simple-select-standard"
-                
-                
                 label="Purpose"
                 name="purpose"
               >
@@ -548,24 +543,14 @@ export default function MyReservations(props) {
                 <MenuItem value={"Other"}>Other</MenuItem>
                 <MenuItem value={"Other"}>Other</MenuItem>
               </Select>
-             </FormControl>
+            </FormControl>
 
-             <TextField
-              name="officeName"
-             
-              sx={{ width: "100%" }}
-              
-              id="outlined-basic"
-              label="Office Name"
-              variant="standard"
-              inputProps={{ maxLength: 20 }}
-            />
+            
             <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <TextField
+              <TextField
                 name="computers"
                 type="number"
                 sx={{ width: "40%" }}
-                
                 InputProps={{
                   inputProps: {
                     min: 0,
@@ -575,22 +560,49 @@ export default function MyReservations(props) {
                 id="outlined-basic"
                 label="Computers"
                 variant="standard"
-                
                 autoFocus={false}
               />
+
             </Box>
+          </Box>
+          <Box
+            sx={{ display: "flex", justifyContent: "space-between", m: "15px" }}
+          >
+            </Box>
+            <Box sx={{float:"right", margin: 2}}>
+          <Button sx={ButtonStyle1} onClick={() => {
+                setEditModal(false);
+                setAttendeesModal(true);
+              }}>
+            Next</Button> </Box>
+
+        </Box>
+      </Modal>
+
+              {/* add or remove attendees */}
+      <Modal
+      disableAutoFocus={true}
+      open={attendeesModal}
+      onClose={() => setAttendeesModal(false)}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+      style={{ width: "100%", overflow: "auto" }}
+    >
+
+        <Box sx={modalStyle}>
+          <Box sx={modalHeaderStyle}>
             <Typography
               fontWeight="bold"
               variant="h6"
               fontFamily="Oswald"
-              backgroundColor="#222222"
               color="white"
               p="5px 10px 5px 10px"
               sx={{ display: "inline-block" }}
             >
               Attendees:
             </Typography>
-
+          </Box>
+            <Box p={4}>
             <Box sx={{ display: "flex", marginTop: "20px" }}>
               {/* <TextField
                 sx={{ width: "100%", marginRight: "20px" }}
@@ -665,13 +677,13 @@ export default function MyReservations(props) {
               </Button>
               
               </Box>
-              <Box m="5px 15px 0px 15px">
+              <Box m="5px 15px 0px 0px">
             <List
               style={{ maxHeight: "200px", width: "100%", overflow: "auto" }}
               className="userList"
               dense={true}
             >
-              <ListItem sx={{ p: "0px 0px 0px 20px" }}>
+              <ListItem sx={{ p: "0px 0px 0px 5px" }}>
                 <ListItemText
                   primary={user.username}
                   secondary={
@@ -684,7 +696,7 @@ export default function MyReservations(props) {
               {attendeeList.map((item, index) => (
                 <ListItem
                   key={index}
-                  sx={{ p: "0px 0px 0px 20px" }}
+                  sx={{ p: "0px 0px 0px 20x" }}
                   secondaryAction={
                     <IconButton
                       edge="end"
@@ -720,16 +732,19 @@ export default function MyReservations(props) {
               ))}
               </List>
         
-              </Box>
-              </Box>
-             
-
-            
-            
-          </Box>
+                  
+              <Box sx={{float:"right", margin: 2, marginRight:-1}}>
+          <Button sx={ButtonStyle1} onClick={() => {
+                setAttendeesModal(false);
+                
+              }}>
+            Save</Button> </Box>
           
           </Box>
-        </Box>
+          </Box>
+          </Box>
+      
 
       </Modal>
+      
         </div> );}

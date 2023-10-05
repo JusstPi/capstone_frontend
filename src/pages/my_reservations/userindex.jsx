@@ -25,6 +25,7 @@ import TableBody from "@mui/material/TableBody";
 import Modal from "@mui/material/Modal";
 import Select from "@mui/material/Select";
 import axios from 'axios';
+import ClearIcon from "@mui/icons-material/Clear";
 import * as React from "react";
 import {
   selectedStyle,
@@ -57,8 +58,9 @@ import {
 //     computers: "2",
 //   },
 // ];
-  const maxComputers = 10;
+  
 export default function UserMyReservations(props) {
+  const maxComputers = 10;
   const [bookingsRefresher, setBookingsRefresher] = useState(true);
   const [fakeUserDb, setFakeUserDb] = useState([]);
   const [eventData,setEventData]=useState([]);
@@ -67,6 +69,7 @@ export default function UserMyReservations(props) {
   const [viewModal, setViewModal] = useState(false);
   const [cancelModal, setCancelModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [attendeesModal, setAttendeesModal] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
   const [viewDetails, setViewDetails] = useState({});
   const found = (element) => element.name === attendeeName;
@@ -521,6 +524,7 @@ export default function UserMyReservations(props) {
               Edit Booking Details
             </Typography>
           </Box>
+
           <Box p={4}>
             <TextField
               name="description"
@@ -576,7 +580,186 @@ export default function UserMyReservations(props) {
 
             </Box>
           </Box>
+          <Box
+            sx={{ display: "flex", justifyContent: "space-between", m: "15px" }}
+          >
+            </Box>
+            <Box sx={{float:"right", margin: 2}}>
+          <Button sx={ButtonStyle1} onClick={() => {
+                setEditModal(false);
+                setAttendeesModal(true);
+              }}>
+            Next</Button> </Box>
+
         </Box>
+      </Modal>
+
+              {/* add or remove attendees */}
+      <Modal
+      disableAutoFocus={true}
+      open={attendeesModal}
+      onClose={() => setAttendeesModal(false)}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+      style={{ width: "100%", overflow: "auto" }}
+    >
+
+        <Box sx={modalStyle}>
+          <Box sx={modalHeaderStyle}>
+            <Typography
+              fontWeight="bold"
+              variant="h6"
+              fontFamily="Oswald"
+              color="white"
+              p="5px 10px 5px 10px"
+              sx={{ display: "inline-block" }}
+            >
+              Attendees:
+            </Typography>
+          </Box>
+            <Box p={4}>
+            <Box sx={{ display: "flex", marginTop: "20px" }}>
+              {/* <TextField
+                sx={{ width: "100%", marginRight: "20px" }}
+                id="outlined-basic"
+                placeholder="Enter Name or Id"
+                variant="standard"
+                onChange={(e) => {
+                  setAttendeeName(e.target.value);
+                }}
+              /> */}
+              <Autocomplete
+                freeSolo
+                defaultValue=""
+                autoSelect={false}
+                id="combo-box-demo"
+                options={fakeUserDb.map((item) => {
+                  return {
+                    label: item.name,
+                    id: item.id,
+                  };
+                })}
+                inputValue={attendeeName}
+                onInputChange={(event, newInputValue) => {
+                  setAttendeeName(newInputValue);
+                }}
+                sx={{ width: 300, marginRight: 5 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Enter Name or Id"
+                    variant="standard"
+                  />
+                )}
+              />
+              <Button
+                onClick={(e) => {
+                  if (attendeeName === "") {
+                    alert("Please Enter Attendee name");
+                    return;
+                  }
+                  if (
+                    attendeeList.some(found) ||
+                    attendeeName === user.username
+                  ) {
+                  } else {
+                    let isExisting = false;
+                    let id = null;
+                    let userFound = null;
+                    //finds username in database
+                    userFound = fakeUserDb.find((x) => x.name === attendeeName);
+
+                    if (userFound !== undefined) {
+                      isExisting = true;
+                      id = userFound?.id;
+                    }
+                    const newUser = {
+                      name: attendeeName,
+                      existing: isExisting,
+                      id: id,
+                    };
+                    setAttendeeList([...attendeeList, newUser]);
+                    // setRefresh(!refresh)
+                  }
+                }}
+                sx={{
+                  color: "white",
+                  backgroundColor: "#555555",
+                  ":hover": { color: "#white", backgroundColor: "#555555" },
+                }}
+              >
+                Add
+              </Button>
+              
+              </Box>
+              <Box m="5px 15px 0px 0px">
+            <List
+              style={{ maxHeight: "200px", width: "100%", overflow: "auto" }}
+              className="userList"
+              dense={true}
+            >
+              <ListItem sx={{ p: "0px 0px 0px 5px" }}>
+                <ListItemText
+                  primary={user.username}
+                  secondary={
+                    <Typography fontSize={14} color="green">
+                      Owner
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              {attendeeList.map((item, index) => (
+                <ListItem
+                  key={index}
+                  sx={{ p: "0px 0px 0px 20x" }}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => {
+                        deleteUser(index);
+                      }}
+                    >
+                      <ClearIcon></ClearIcon>
+                    </IconButton>
+                  }
+                >
+                  {/* <ListItemAvatar>
+                  <Avatar>
+                    <PersonIcon></PersonIcon>
+                  </Avatar>
+                </ListItemAvatar> */}
+                  <ListItemText
+                    primary={item.name}
+                    secondary={
+                      item.existing === true ? (
+                        <Typography fontSize={14} color="green">
+                          Existing User:Yes{" "}
+                        </Typography>
+                      ) : (
+                        <Typography fontSize={14} color="#555555">
+                          Existing User:No{" "}
+                        </Typography>
+                      )
+                    }
+                  />
+                </ListItem>
+              ))}
+              </List>
+        
+                  
+              <Box sx={{float:"right", margin: 2, marginRight:-1}}>
+          <Button sx={ButtonStyle1} onClick={() => {
+                setAttendeesModal(false);
+                
+              }}>
+            Save</Button> </Box>
+          
+          </Box>
+          </Box>
+          </Box>
+      
+
       </Modal>
     </div>
   );
